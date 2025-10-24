@@ -4,17 +4,22 @@ from selenium.webdriver.common.by import By
 
 class LoginPage(BasePage):
 
-    username = (By.XPATH, "//input[@id='user-name']")
-    password = (By.XPATH, "//input[@id='password']")
-    login_button = (By.XPATH, "//input[@id='login-button']")
+    username = (By.ID, "user-name")
+    password = (By.ID, "password")
+    login_button = (By.ID, "login-button")
     product_selector = (By.XPATH, "//span[@class='title']")
 
-    login_data= "login.json"
+    login_data = "login.json"
 
     def open_url(self):
         get_url = self.get_data(self.login_data) #LEE EL ARCHIVO JSON
         url_value = get_url["url"] #DECLARO UNA VARIABLE "VALUE"PARA DECIRLE, DEL JSON QUIERO QUE BUSQUES LA "URL"----> DE DONDE? DE LA VARIABLEGET URL CREADA ANTERIORMENTE
         self.navigate_to(url_value)
+
+    def get_url(self):
+        get_url = self.get_data(self.login_data)  # LEE EL ARCHIVO JSON
+        url_value = get_url["url"]
+
 
     def enter_username(self):
         get_username = self.get_data(self.login_data)
