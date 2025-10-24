@@ -1,3 +1,45 @@
 # IDEs
 .idea/
 .vscode/
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.env
+.env/
+*.egg-info/
+dist/
+build/
+
+
+
+# Archivos temporales
+.DS_Store
+*.log
+
+
+# Virtualenv
+
+
+# Archivos pytest
+.pytest_cache/
+.cache/
+
+
+# Archivos de ejecución
+*.out
+*.xml
+*.tmp
+
+
+# Ruta donde se almacenan las capturas de pantalla
+test/screenshot
+
+
+# Archivos Python compilados (más específicos)
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
