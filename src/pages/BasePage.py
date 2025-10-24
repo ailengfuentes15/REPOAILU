@@ -57,6 +57,13 @@ class BasePage:
         return WebDriverWait(self.driver, timeout).until(
             EC.presence_of_element_located(web_elements))
 
+    def wait_until_visible(self, web_elements, timeout=30):
+        """
+        Espera hasta que el elemento especificado esté presente en el DOM.
+        """
+        return WebDriverWait(self.driver, timeout).until(
+            EC.visibility_of_element_located(web_elements))
+
     def wait_until_clickable(self, web_elements, timeout=30):
         """Espera hasta que el elemento sea clickeable."""
         return WebDriverWait(self.driver, timeout).until(
@@ -88,6 +95,12 @@ class BasePage:
         text = element.text
         logging.info(f"Texto obtenido del elemento {web_elements}: '{text}'")
         return text
+
+    def get_url(self):
+        """Devuelve la URL actual del navegador."""
+        current_url = self.driver.current_url
+        logging.info(f"URL actual: {current_url}")
+        return current_url
 
     @staticmethod
     def get_data(filename):
@@ -123,3 +136,5 @@ class BasePage:
         WebDriverWait(self.driver, 10).until(lambda driver: len(driver.window_handles) > 1)
         nueva_ventana = self.driver.window_handles[1]
         self.driver.switch_to.window(nueva_ventana)
+
+

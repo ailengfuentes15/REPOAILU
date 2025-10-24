@@ -16,6 +16,11 @@ class LoginPage(BasePage):
         url_value = get_url["url"] #DECLARO UNA VARIABLE "VALUE"PARA DECIRLE, DEL JSON QUIERO QUE BUSQUES LA "URL"----> DE DONDE? DE LA VARIABLEGET URL CREADA ANTERIORMENTE
         self.navigate_to(url_value)
 
+    def get_url(self):
+        get_url = self.get_data(self.login_data)  # LEE EL ARCHIVO JSON
+        url_value = get_url["url"]
+
+
     def enter_username(self):
         get_username = self.get_data(self.login_data)
         username_value = get_username["username"]

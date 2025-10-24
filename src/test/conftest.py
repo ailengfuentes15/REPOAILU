@@ -8,5 +8,5 @@ def login_fixture():
    driver = BasePage.initialize_ChromeDriver()
    login_page = LoginPage(driver)
    login_page.login_completo()
-   yield login_page
+   yield driver, login_page
    BasePage(driver).close_browser()
