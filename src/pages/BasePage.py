@@ -23,9 +23,26 @@ class BasePage:
 
     @staticmethod
     def initialize_ChromeDriver():
-        """Inicializa y retorna una nueva instancia de Chrome WebDriver."""
-        driver = webdriver.Chrome()
+        options = Options()
+
+        # Desactiva popups de Google Chrome (incluye guardar contraseña y alertas de contraseñas filtradas)
+        options.add_argument("--disable-features=PasswordManagerEnabled,AutofillServerCommunication")
+        options.add_experimental_option("prefs", {
+            "credentials_enable_service": False,
+            "profile.password_manager_enabled": False,
+            "profile.default_content_setting_values.notifications": 2,
+            "profile.default_content_setting_values.popups": 0
+        })
+
+        # Modo estable si tenés popups molestos de Chrome
+        options.add_argument("--disable-infobars")
+        options.add_argument("--disable-notifications")
+        options.add_argument("--disable-popup-blocking")
+
+        driver = webdriver.Chrome(options=options)
         return driver
+
+
 
     @staticmethod
     def initialize_ChromeDriver_headless(headless=True):
