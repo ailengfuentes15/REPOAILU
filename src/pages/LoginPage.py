@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 class LoginPage(BasePage):
 
     username = (By.ID, "user-name")
-    password = (By.ID, "password")
+    password = (By.ID, "password") 
     login_button = (By.ID, "login-button")
     product_selector = (By.XPATH, "//span[@class='title']")
 
@@ -26,10 +26,10 @@ class LoginPage(BasePage):
         username_value = get_username["username"]
         self.input_text(self.username, username_value)
 
-    def enter_userlocked(self):
-        get_userlocked = self.get_data(self.login_data)
-        userlocked_value = get_userlocked["user_locked"]
-        self.input_text(self.username, userlocked_value)
+    def enter_invalid_username(self):
+        get_invalid_username = self.get_data(self.login_data)
+        invalid_username_value = get_invalid_username["user_locked"]
+        self.input_text(self.username, invalid_username_value)
 
     def enter_password(self):
         get_password = self.get_data(self.login_data)

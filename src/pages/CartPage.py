@@ -9,6 +9,7 @@ class CartPage(BasePage):
     cart_agregado = (By.CSS_SELECTOR, ".shopping_cart_badge")
     go_cart = (By.XPATH, "//a[@class='shopping_cart_link']")
     bag_cart = (By.XPATH, "//div[normalize-space()='Sauce Labs Backpack']")
+    checkout_button = (By.ID, "checkout")
 
 
     def add_products_cart (self):
@@ -20,4 +21,14 @@ class CartPage(BasePage):
     def verify_navigate_cart (self):
         self.click_element(self.go_cart)
 
+    def go_to_cart_page(self):
+        self.click_element(self.go_cart)
+    
+    def click_checkout_button(self):
+        self.click_element(self.checkout_button)
 
+    def cart_completo(self):
+        self.add_products_cart()
+        self.go_to_cart_page()
+        self.click_checkout_button()
+       
