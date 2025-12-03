@@ -67,21 +67,21 @@ class BasePage:
         """Navega a la URL especificada en el navegador."""
         self.driver.get(url)
 
-    def wait_for_element(self, web_elements, timeout=30):
+    def wait_for_element(self, web_elements, timeout=10):
         """
         Espera hasta que el elemento especificado esté presente en el DOM.
         """
         return WebDriverWait(self.driver, timeout).until(
             EC.presence_of_element_located(web_elements))
 
-    def wait_until_visible(self, web_elements, timeout=30):
+    def wait_until_visible(self, web_elements, timeout=10):
         """
         Espera hasta que el elemento especificado esté presente en el DOM.
         """
         return WebDriverWait(self.driver, timeout).until(
             EC.visibility_of_element_located(web_elements))
 
-    def wait_until_clickable(self, web_elements, timeout=30):
+    def wait_until_clickable(self, web_elements, timeout=10):
         """Espera hasta que el elemento sea clickeable."""
         return WebDriverWait(self.driver, timeout).until(
             EC.element_to_be_clickable(web_elements))
