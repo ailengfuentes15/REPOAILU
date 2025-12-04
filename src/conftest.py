@@ -4,7 +4,7 @@ from datetime import datetime
 
 @pytest.fixture
 def url_base():
-    return "https://reqres.in/api/users"
+    return "git s"
 
 @pytest.fixture
 def header_request():
