@@ -1,22 +1,36 @@
 
+import pytest
 from src.pages.InventoryPage import InventoryPage
 
 class TestInventory:
 
-    def test_inventory(self, login_fixture):
-
-
+    @pytest.mark.parametrize(
+        "element, mensaje",
+        [
+            ("menu_burger", "Menu burger no está presente"),
+            ("filter_selector", "Filtro no está presente"),
+            ("cart_selector", "Carrito no está presente"),
+        ]
+    )
+    def test_elementos_presentes(self, login_fixture, element, mensaje):
         driver, login_page = login_fixture
         inventory_page = InventoryPage(driver)
 
-        # Assert de elementos presentes
-        assert inventory_page.is_element_present(inventory_page.menu_burger), "Menu burger no está presente"
-        assert inventory_page.is_element_present(inventory_page.filter_selector), "Filtro no está presente"
-        assert inventory_page.is_element_present(inventory_page.cart_selector), "Carrito no está presente"
+        locator = getattr(inventory_page, element)
+        assert inventory_page.is_element_present(locator), mensaje
 
-        # Assert de elementos visibles
-        assert inventory_page.is_element_visible(inventory_page.bag_selector), "Bolso no está visible"
-        assert inventory_page.is_element_visible(inventory_page.bike_selector), "Bicicleta no está visible"
+    @pytest.mark.parametrize(
+        "element, mensaje",
+        [
+            ("bag_selector", "Bolso no está visible"),
+            ("bike_selector", "Bicicleta no está visible"),
+        ]
+    )
+    def test_elementos_visibles(self, login_fixture, element, mensaje):
+        driver, login_page = login_fixture
+        inventory_page = InventoryPage(driver)
 
+        locator = getattr(inventory_page, element)
+        assert inventory_page.is_element_visible(locator), mensaje
 
 
