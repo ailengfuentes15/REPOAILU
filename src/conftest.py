@@ -1,15 +1,35 @@
 import pytest
 import os
 from datetime import datetime
+from src.pages.peticiones.PostPage import PostPage
+from src.pages.peticiones.DeletePage import DeletePage
 
-@pytest.fixture
-def url_base():
-    return "git s"
 
-@pytest.fixture
-def header_request():
-    return {"x-api-key": "reqres-free-v1"}
+from src.pages.peticiones.GetPage import GetPage   # <-- ruta nueva correcta
 
+
+@pytest.fixture(scope="session")
+def base_url():
+    return "https://jsonplaceholder.typicode.com"
+
+
+@pytest.fixture(scope="session")
+def get_page(base_url):
+    return GetPage(base_url)
+
+@pytest.fixture(scope="session")
+def post_page(base_url):
+    """
+    Devuelve la Page encargada de manejar POST.
+    """
+    return PostPage(base_url)
+
+@pytest.fixture(scope="session")
+def delete_page(base_url):
+    """
+    Devuelve la Page de DELETE.
+    """
+    return DeletePage(base_url)
 
 
 @pytest.hookimpl(hookwrapper=True, tryfirst=True)
