@@ -2,43 +2,99 @@ import pytest
 import os
 from datetime import datetime
 
-@pytest.fixture
-def url_base():
-    return "git s"
+# ------------------ API PAGES ------------------
+from src.pages.peticiones.GetPage import GetPage
+from src.pages.peticiones.PostPage import PostPage
+from src.pages.peticiones.DeletePage import DeletePage
 
-@pytest.fixture
-def header_request():
-    return {"x-api-key": "reqres-free-v1"}
+# ------------------ SELENIUM ------------------
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 
+
+# =========================================================
+# FIXTURES API
+# =========================================================
+
+@pytest.fixture(scope="session")
+def base_url():
+    return "https://jsonplaceholder.typicode.com"
+
+
+@pytest.fixture(scope="session")
+def get_page(base_url):
+    return GetPage(base_url)
+
+
+@pytest.fixture(scope="session")
+def post_page(base_url):
+    return PostPage(base_url)
+
+
+@pytest.fixture(scope="session")
+def delete_page(base_url):
+    return DeletePage(base_url)
+
+
+# =========================================================
+# FIXTURE PARA SELENIUM (HEADLESS)
+# =========================================================
+@pytest.fixture(scope="function")
+def driver():
+    """
+    Crea una instancia de Chrome en modo headless.
+    Compatible con GitHub Actions y ejecución local.
+    """
+    chrome_options = Options()
+
+    # Modo headless moderno
+    chrome_options.add_argument("--headless=new")
+
+    # Flags obligatorios para Linux (GitHub Actions)
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--window-size=1920,1080")
+
+    # No pasamos el driver path → webdriver_manager lo gestiona automáticamente
+    driver = webdriver.Chrome(options=chrome_options)
+
+    yield driver
+    driver.quit()
+
+
+
+# =========================================================
+# HOOK: CAPTURA DE PANTALLA ANTE FALLOS
+# =========================================================
 @pytest.hookimpl(hookwrapper=True, tryfirst=True)
 def pytest_runtest_makereport(item, call):
 
-    """
-        Hook de Pytest que se ejecuta después de cada prueba para generar un reporte.
-        Si la prueba falla y existe un objeto driver toma una captura de pantalla y la guarda en el directorio test/screenshot
-        con el nombre de la prueba.
-    """
     outcome = yield
     rep = outcome.get_result()
+
     if rep.when == "call" and rep.failed:
-        driver = getattr(item.instance, 'driver', None) \
-              or getattr(item.cls, 'driver', None) \
-              or item.funcargs.get('driver', None)
-        
-        # Si no se encuentra 'driver' directamente, buscar en fixtures comunes que retornan tuplas
+
+        # Intentamos obtener 'driver' del test
+        driver = (
+            getattr(item.instance, 'driver', None)
+            or getattr(item.cls, 'driver', None)
+            or item.funcargs.get('driver', None)
+        )
+
+        # Buscar driver dentro de fixtures que devuelvan tuplas
         if not driver:
-            # Lista de fixtures comunes que retornan tuplas con driver como primer elemento
             fixture_names = ['login_fixture', 'cart_fixture']
-            for fixture_name in fixture_names:
-                fixture_value = item.funcargs.get(fixture_name, None)
-                if fixture_value:
-                    # Si el fixture retorna una tupla/lista, el driver es el primer elemento
-                    if isinstance(fixture_value, (tuple, list)) and len(fixture_value) > 0:
-                        driver = fixture_value[0]
-                        break
-        
+            for f in fixture_names:
+                val = item.funcargs.get(f, None)
+                if isinstance(val, (tuple, list)) and len(val) > 0:
+                    driver = val[0]
+                    break
+
+        # Si existe driver → guardar screenshot
         if driver:
             base_dir = os.path.dirname(os.path.abspath(__file__))
             screenshot_dir = os.path.join(base_dir, "test", "screenshot")
@@ -46,5 +102,5 @@ def pytest_runtest_makereport(item, call):
 
             screenshot_path = os.path.join(screenshot_dir, f"{item.name}.png")
             driver.save_screenshot(screenshot_path)
-            print(f"\n[!] Screenshot guardado: {screenshot_path}")
 
+            print(f"\n[!] Screenshot guardado: {screenshot_path}")
