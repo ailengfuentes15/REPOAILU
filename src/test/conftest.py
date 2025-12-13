@@ -6,7 +6,7 @@ from src.pages.CheckoutPage import CheckoutPage
 
 @pytest.fixture(scope="function")
 def driver():
-    driver = BasePage.initialize_ChromeDriver()
+    driver = BasePage.initialize_ChromeDriver_headless()
     yield driver
     driver.quit()
 
@@ -19,7 +19,7 @@ def login_fixture(driver):
 
 
 @pytest.fixture(scope="function")
-def cart_fixture(driver):
+def cart_fixture(driver, login_fixture):
     cart_page = CartPage(driver)
     cart_page.cart_completo()
     checkout_page = CheckoutPage(driver)
